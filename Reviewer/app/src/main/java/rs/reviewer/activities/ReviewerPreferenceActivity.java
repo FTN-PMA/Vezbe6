@@ -3,8 +3,9 @@ package rs.reviewer.activities;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+
+import androidx.core.app.NavUtils;
 
 import rs.reviewer.R;
 

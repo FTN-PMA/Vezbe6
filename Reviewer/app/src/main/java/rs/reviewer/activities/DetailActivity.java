@@ -3,14 +3,12 @@ package rs.reviewer.activities;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import model.Cinema;
 import rs.reviewer.R;
 import rs.reviewer.database.ReviewerSQLiteHelper;
-import rs.reviewer.tools.Util;
 
 public class DetailActivity extends AppCompatActivity {
     private Uri todoUri;

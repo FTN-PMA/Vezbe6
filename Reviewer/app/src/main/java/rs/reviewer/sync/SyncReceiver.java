@@ -11,8 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
-
+import androidx.core.app.NotificationCompat;
 import rs.reviewer.MainActivity;
 import rs.reviewer.R;
 import rs.reviewer.activities.ReviewerPreferenceActivity;
@@ -25,11 +24,12 @@ import rs.reviewer.tools.ReviewerTools;
 public class SyncReceiver extends BroadcastReceiver {
 
     private static int notificationID = 1;
+    private static String channelId = "My_Chan_Id";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationManager mNotificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean allowSyncNotif = sharedPreferences.getBoolean(context.getString(R.string.notif_on_sync_key), false);

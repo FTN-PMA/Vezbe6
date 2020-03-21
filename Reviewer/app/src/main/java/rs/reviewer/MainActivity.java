@@ -9,12 +9,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,18 +18,22 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import model.NavItem;
 import rs.reviewer.activities.ReviewerPreferenceActivity;
 import rs.reviewer.adapters.DrawerListAdapter;
-import rs.reviewer.dialogs.LocationDialog;
 import rs.reviewer.fragments.MyFragment;
 import rs.reviewer.sync.SyncReceiver;
 import rs.reviewer.sync.SyncService;
 import rs.reviewer.tools.FragmentTransition;
 import rs.reviewer.tools.ReviewerTools;
 import rs.reviewer.tools.Util;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private RelativeLayout mDrawerPane;
-    private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
     private AlertDialog dialog;
@@ -54,15 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
     private SyncReceiver sync;
     public static String SYNC_DATA = "SYNC_DATA";
-
     private String synctime;
     private boolean allowSync;
-    private String lookupRadius;
-
-    private boolean allowReviewNotif;
-    private boolean allowCommentedNotif;
     private SharedPreferences sharedPreferences;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         
         prepareMenu(mNavItems);
         
-        mTitle = mDrawerTitle = getTitle();
+        mTitle  = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerList = (ListView) findViewById(R.id.navList);
         
@@ -87,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         // enable ActionBar app icon to behave as action to toggle nav drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -96,15 +87,6 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-//        getActionBar().setHomeButtonEnabled(true);
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-
-        // OVO NE MORA DA SE KORISTI, UKOLIKO SE NE KORISTI
-        // ONDA SE NE MENJA TEKST PRILIKOM OPEN CLOSE DRAWERA POGLEDATI JOS
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
@@ -130,9 +112,8 @@ public class MainActivity extends AppCompatActivity {
             selectItemFromDrawer(0);
         }
 
-        //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setUpReceiver();
-        
+        consultPreferences();
     }
 
     private void setUpReceiver(){
@@ -141,36 +122,13 @@ public class MainActivity extends AppCompatActivity {
         // Retrieve a PendingIntent that will perform a broadcast
         Intent alarmIntent = new Intent(this, SyncService.class);
         pendingIntent = PendingIntent.getService(this, 0, alarmIntent, 0);
-
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        consultPreferences();
     }
 
     private void consultPreferences(){
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         synctime = sharedPreferences.getString(getString(R.string.pref_sync_list), "1");// pola minuta
         allowSync = sharedPreferences.getBoolean(getString(R.string.pref_sync), false);
-
-        lookupRadius = sharedPreferences.getString(getString(R.string.pref_radius), "1");//1km
-
-        allowCommentedNotif = sharedPreferences.getBoolean(getString(R.string.notif_on_my_comment_key), false);
-        allowReviewNotif = sharedPreferences.getBoolean(getString(R.string.notif_on_my_review_key), false);
-
-        Toast.makeText(MainActivity.this, allowSync + " " + lookupRadius + " " + synctime, Toast.LENGTH_SHORT).show();
-    }
-
-    private void showLocatonDialog(){
-        if(dialog == null){
-            dialog = new LocationDialog(MainActivity.this).prepareDialog();
-        }else{
-            if(dialog.isShowing()){
-                dialog.dismiss();
-            }
-        }
-
-        dialog.show();
     }
     
     @Override
