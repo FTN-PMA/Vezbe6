@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         prepareMenu(mNavItems);
         
         mTitle  = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = findViewById(R.id.drawerLayout);
+        mDrawerList = findViewById(R.id.navList);
         
         // Populate the Navigtion Drawer with options
-        mDrawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
+        mDrawerPane = findViewById(R.id.drawerPane);
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
         
         // set a custom shadow that overlays the main content when the drawer opens
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setAdapter(adapter);
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
 
@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
-//        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
             selectItemFromDrawer(0);
@@ -126,7 +125,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void consultPreferences(){
+
+        /*
+        * getDefaultSharedPreferences():
+        * koristi podrazumevano ime preference-file-a.
+        * Podrzazumevani fajl je setovan na nivou aplikacije tako da sve aktivnosti u istom context-u mogu da mu pristupe jednostavnije
+        * getSharedPreferences(name,mode):
+        * trazi da se specificira ime preference file-a requires i mod u kome se radi (e.g. private, world_readable, etc.)
+        */
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        /*
+        * Koristeci parove kljuc-vrednost iz shared preferences mozemo da dobijemo
+        * odnosno da zapisemo nekakve vrednosti. Te vrednosti mogu da budu iskljucivo
+        * prosti tipovi u Javi.
+        * Kao prvi parametar prosledjujemo kljuc, a kao drugi podrazumevanu vrednost,
+        * ako nesto pod tim kljucem se ne nalazi u storage-u, da dobijemo podrazumevanu
+        * vrednost nazad, i to nam je signal da nista nije sacuvano pod tim kljucem.
+        * */
         synctime = sharedPreferences.getString(getString(R.string.pref_sync_list), "1");// pola minuta
         allowSync = sharedPreferences.getBoolean(getString(R.string.pref_sync), false);
     }

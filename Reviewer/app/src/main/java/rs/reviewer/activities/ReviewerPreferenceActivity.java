@@ -1,25 +1,20 @@
 package rs.reviewer.activities;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.view.MenuItem;
-
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
-
+import androidx.preference.PreferenceFragmentCompat;
 import rs.reviewer.R;
+import rs.reviewer.tools.FragmentTransition;
 
-public class ReviewerPreferenceActivity extends PreferenceActivity {
-	
-	@SuppressWarnings("deprecation")
+public class ReviewerPreferenceActivity extends AppCompatActivity {
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
-//		addPreferencesFromResource(R.xml.preferences);
-		getFragmentManager().beginTransaction().replace(android.R.id.content,
-				new PrefsFragment()).commit();
+		setContentView(R.layout.settings_layout);
+		FragmentTransition.to(PrefsFragment.newInstance(), this);
 	}
 	
 	@Override
@@ -39,13 +34,25 @@ public class ReviewerPreferenceActivity extends PreferenceActivity {
 		super.onResume();
 	}
 
-	public static class PrefsFragment extends PreferenceFragment {
+	/*
+	* Ekran za podesenja u novojim verzijama Android-a se preporucjue da bude fragment
+	* Sto znaci da moramo da napraivmo aktivnost, na koju cemo 'zalepiti' fragment'
+	* Kako je to specifican fragment, za njega ne ravimo layout, kao za ostale frafgmente/aktivnosti
+	* nego koristimo posebnu specifikaciuju koja opisuje koja to podesenja imamo
+	* NOTE: pogeldati res/xml/preferences.xml file za vise detalja.
+	* */
+	public static class PrefsFragment extends PreferenceFragmentCompat {
+
+		private static PrefsFragment newInstance() {
+			Bundle args = new Bundle();
+
+			PrefsFragment fragment = new PrefsFragment();
+			fragment.setArguments(args);
+			return fragment;
+		}
 
 		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-
-			// Load the preferences from an XML resource
+		public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 			addPreferencesFromResource(R.xml.preferences);
 		}
 	}

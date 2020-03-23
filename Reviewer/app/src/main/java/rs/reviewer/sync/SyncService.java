@@ -16,18 +16,11 @@ public class SyncService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        //Intent ints = new Intent(MainActivity.SYNC_DATA);
         int status = ReviewerTools.getConnectivityStatus(getApplicationContext());
-
-        //ints.putExtra(RESULT_CODE, status);
-
         //ima konekcije ka netu skini sta je potrebno i sinhronizuj bazu
-        if(status == ReviewerTools.TYPE_WIFI){
+        if(status == ReviewerTools.TYPE_WIFI || status == ReviewerTools.TYPE_MOBILE){
             new SyncTask(getApplicationContext()).execute();
         }
-
-        //sendBroadcast(ints);
-
         stopSelf();
 
         return START_NOT_STICKY;
